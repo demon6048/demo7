@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deli Papa - El Sabor de la Tradición</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #FFF8E1; /* Amber 50 - Creamy background */
+        }
+
+        h1, h2, h3 {
+            font-family: 'Fredoka One', cursive; /* Friendly, rounded font for titles */
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            height: 300px;
+        }
+
+        /* Custom animation for the "Order" button */
+        @keyframes pulse-custom {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .btn-pulse {
+            animation: pulse-custom 2s infinite;
+        }
+
+        .product-card {
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .ingredient-pill {
+            transition: all 0.2s;
+        }
+        .ingredient-pill:hover {
+            background-color: #FFF;
+            transform: scale(1.1);
+            cursor: default;
+        }
+    </style>
+</head>
+<body class="text-amber-900">
+
+    <!-- Navbar -->
+    <nav class="bg-amber-600 text-white shadow-lg sticky top-0 z-50 transition-colors duration-300">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-utensils text-2xl"></i>
+                <span class="text-2xl tracking-wide font-normal">Deli Papa</span>
+            </div>
+            <div class="hidden md:flex space-x-6 font-bold">
+                <a href="#menu" class="hover:text-amber-200 transition">Nuestras Papas</a>
+                <a href="#sabores" class="hover:text-amber-200 transition">Experiencia</a>
+                <a href="#cultura" class="hover:text-amber-200 transition">Nosotros</a>
+            </div>
+            <a href="#contacto" class="bg-white text-amber-700 px-4 py-1 rounded-full font-bold hover:bg-amber-100 transition shadow-md">
+                <i class="fas fa-motorcycle mr-1"></i> Pedir
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section con Imagen de Fondo -->
+    <!-- 
+        =================================================================================
+        ¡HOLA! AQUÍ ES DONDE CAMBIAS LA IMAGEN DE FONDO.
+        Busca abajo donde dice url('...') y pon el enlace de tu propia foto dentro de las comillas.
+        
+        El código "linear-gradient" añade un filtro naranja transparente para que el texto se lea bien.
+        =================================================================================
+    -->
+    <header class="relative bg-cover bg-center pt-24 pb-32 px-4 text-center overflow-hidden rounded-b-[3rem] shadow-xl" 
+            style="background-image: linear-gradient(to bottom, rgba(217, 119, 6, 0.85), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?q=80&w=2070&auto=format&fit=crop');">
+            <!-- NOTA: La imagen actual es de demostración (comida peruana/fritura). Reemplaza el link de unsplash arriba. -->
+
+        <div class="max-w-4xl mx-auto relative z-10">
+            <h1 class="text-6xl md:text-8xl mb-4 text-white drop-shadow-lg tracking-wide">Deli Papa</h1>
+            <p class="text-xl md:text-2xl font-bold mb-8 max-w-2xl mx-auto text-amber-50 drop-shadow-md">
+                Donde la tradición peruana se rellena de sabor. <br>
+                <span class="font-normal italic mt-2 block opacity-90">Cultural. Amigable. Delicioso.</span>
+            </p>
+            <div class="flex justify-center space-x-4">
+                <a href="#menu" class="bg-white text-amber-700 px-8 py-3 rounded-full font-bold text-lg shadow-lg hover:bg-amber-50 transition transform hover:scale-105 border-b-4 border-amber-800">
+                    Ver Menú
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN MENU SECTION -->
+    <section id="menu" class="max-w-6xl mx-auto px-4 py-16 -mt-12 relative z-20">
+        <div class="text-center mb-12">
+            <span class="bg-orange-100 text-orange-700 px-4 py-1 rounded-full text-sm font-bold uppercase tracking-wider shadow-sm">Nuestras Especialidades</span>
+            <h2 class="text-4xl text-amber-900 mt-4">Dos Estilos, Un Solo Amor</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- Papa Clásica Card -->
+            <article class="product-card bg-white rounded-3xl shadow-xl overflow-hidden border-2 border-transparent hover:border-amber-400">
+                <div class="h-48 bg-amber-200 flex items-center justify-center relative bg-[url('https://www.transparenttextures.com/patterns/food.png')]">
+                    <!-- Icono Gigante -->
+                    <div class="text-9xl transform transition hover:scale-110 cursor-pointer drop-shadow-md" onclick="toggleDetails('clasica')">🥔</div>
+                    <div class="absolute bottom-4 right-4 bg-white px-3 py-1 rounded-full text-xs font-bold text-amber-800 shadow">Top Seller</div>
+                </div>
+                <div class="p-8">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-3xl text-amber-900">La Clásica</h3>
+                        <span class="text-2xl font-bold text-orange-600">$4.000</span>
+                    </div>
+                    <p class="text-gray-600 mb-6 text-lg">
+                        El sabor que te transporta a casa. Crujiente por fuera, suave por dentro, con el guiso de la abuela.
+                    </p>
+                    
+                    <!-- Interactive Ingredients -->
+                    <div class="mb-6">
+                        <h4 class="text-sm font-bold text-gray-400 uppercase mb-2">Lo que lleva dentro:</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="ingredient-pill bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold border border-yellow-200">Carne Molida</span>
+                            <span class="ingredient-pill bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold border border-yellow-200">Huevo Duro</span>
+                            <span class="ingredient-pill bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold border border-yellow-200">Aceituna</span>
+                            <span class="ingredient-pill bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold border border-yellow-200">Guiso Criollo</span>
+                        </div>
+                    </div>
+
+                    <button onclick="showFlavorProfile('clasica')" class="w-full py-3 border-2 border-amber-500 text-amber-600 rounded-xl font-bold hover:bg-amber-500 hover:text-white transition">
+                        Ver Perfil de Sabor
+                    </button>
+                </div>
+            </article>
+
+            <!-- Papa Lomo Saltado Card -->
+            <article class="product-card bg-white rounded-3xl shadow-xl overflow-hidden border-2 border-transparent hover:border-red-400">
+                <div class="h-48 bg-red-100 flex items-center justify-center relative bg-[url('https://www.transparenttextures.com/patterns/food.png')]">
+                    <!-- Icono Gigante -->
+                    <div class="text-9xl transform transition hover:scale-110 cursor-pointer drop-shadow-md" onclick="toggleDetails('lomo')">🥘</div>
+                    <div class="absolute bottom-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow">Premium</div>
+                </div>
+                <div class="p-8">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-3xl text-red-900">Lomo Saltado</h3>
+                        <span class="text-2xl font-bold text-red-600">$6.500</span>
+                    </div>
+                    <p class="text-gray-600 mb-6 text-lg">
+                        Fusión peruana explosiva. Trozos de lomo fino flambeados al wok dentro de nuestra masa dorada.
+                    </p>
+                    
+                    <!-- Interactive Ingredients -->
+                    <div class="mb-6">
+                        <h4 class="text-sm font-bold text-gray-400 uppercase mb-2">Ingredientes Premium:</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="ingredient-pill bg-red-50 text-red-800 px-3 py-1 rounded-full text-sm font-semibold border border-red-200">Lomo Fino</span>
+                            <span class="ingredient-pill bg-red-50 text-red-800 px-3 py-1 rounded-full text-sm font-semibold border border-red-200">Cebolla Roja</span>
+                            <span class="ingredient-pill bg-red-50 text-red-800 px-3 py-1 rounded-full text-sm font-semibold border border-red-200">Tomate</span>
+                            <span class="ingredient-pill bg-red-50 text-red-800 px-3 py-1 rounded-full text-sm font-semibold border border-red-200">Toque de Sillao</span>
+                        </div>
+                    </div>
+
+                    <button onclick="showFlavorProfile('lomo')" class="w-full py-3 border-2 border-red-500 text-red-600 rounded-xl font-bold hover:bg-red-500 hover:text-white transition">
+                        Ver Perfil de Sabor
+                    </button>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- FLAVOR PROFILE SECTION (Interactive Chart) -->
+    <section id="sabores" class="bg-white py-16 shadow-inner relative overflow-hidden">
+        <!-- Decoration -->
+        <div class="absolute -right-20 top-10 text-9xl text-amber-50 opacity-50 rotate-12 z-0">🥔</div>
+
+        <div class="max-w-4xl mx-auto px-4 relative z-10">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2">
+                    <span class="text-orange-500 font-bold uppercase text-sm tracking-wider">Radar de Sabores</span>
+                    <h2 class="text-3xl text-amber-900 mb-4 mt-2">¿Cuál es tu antojo hoy?</h2>
+                    <p class="text-gray-600 mb-6 text-lg leading-relaxed">
+                        En <span class="font-bold text-amber-600">Deli Papa</span>, cada papa tiene personalidad. 
+                        Usa nuestro visualizador para entender la diferencia entre la tradición hogareña y la intensidad de la fusión.
+                    </p>
+                    
+                    <div class="bg-amber-50 p-6 rounded-2xl border-l-4 border-amber-400 shadow-sm">
+                        <h4 class="font-bold text-amber-800 mb-2"><i class="fas fa-info-circle mr-2"></i>El dato cultural:</h4>
+                        <p id="flavor-text" class="text-sm text-gray-700 italic">
+                            Selecciona "Ver Perfil de Sabor" en una de las papas arriba para comparar.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2 w-full">
+                    <div class="chart-container">
+                        <canvas id="flavorRadar"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CULTURAL SECTION -->
+    <section id="cultura" class="py-16 px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl text-amber-900 mb-8">Más que Comida, es Cultura</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition">
+                    <div class="text-4xl text-orange-500 mb-4"><i class="fas fa-hand-holding-heart"></i></div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Servicio Amigable</h3>
+                    <p class="text-gray-600">Aquí no eres un cliente, eres un "vecino". Te atendemos con la calidez de casa.</p>
+                </div>
+                <div class="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition">
+                    <div class="text-4xl text-orange-500 mb-4"><i class="fas fa-history"></i></div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Receta Ancestral</h3>
+                    <p class="text-gray-600">Respetamos la técnica. Masa 100% natural, sin aditivos, prensada a mano cada mañana.</p>
+                </div>
+                <div class="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition">
+                    <div class="text-4xl text-orange-500 mb-4"><i class="fas fa-users"></i></div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Punto de Encuentro</h3>
+                    <p class="text-gray-600">Deli Papa es el lugar para compartir. Comida honesta para gente auténtica.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER / CONTACT -->
+    <footer id="contacto" class="bg-amber-900 text-amber-100 py-12">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-3xl mb-6 font-fredoka">¿Listo para probar?</h2>
+            <p class="mb-8 text-xl">Visítanos o pide a domicilio.</p>
+            
+            <button class="btn-pulse bg-green-500 text-white px-8 py-4 rounded-full font-bold text-xl shadow-lg hover:bg-green-600 transition flex items-center justify-center mx-auto gap-3">
+                <i class="fab fa-whatsapp text-3xl"></i>
+                Haz tu pedido por WhatsApp
+            </button>
+
+            <div class="mt-12 pt-8 border-t border-amber-800 text-sm text-amber-400">
+                <p>&copy; 2024 Deli Papa. Todos los derechos reservados.</p>
+                <div class="flex justify-center space-x-4 mt-4 text-xl">
+                    <a href="#" class="hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="hover:text-white transition"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="hover:text-white transition"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Data for Chart
+        const flavorData = {
+            clasica: {
+                label: 'La Clásica',
+                data: [90, 40, 20, 80, 60], // Tradición, Picante, Fusión, Contundencia, Jugosidad
+                color: 'rgba(245, 158, 11, 0.6)', // Amber
+                borderColor: 'rgba(245, 158, 11, 1)',
+                text: "La Clásica es un abrazo al corazón. Destaca por su alto nivel de Tradición y Contundencia. Es el sabor equilibrado que esperas, con una jugosidad perfecta gracias al guiso casero."
+            },
+            lomo: {
+                label: 'Lomo Saltado',
+                data: [50, 60, 95, 85, 90], // Tradición, Picante, Fusión, Contundencia, Jugosidad
+                color: 'rgba(239, 68, 68, 0.6)', // Red
+                borderColor: 'rgba(239, 68, 68, 1)',
+                text: "El Lomo Saltado es una explosión. Domina en Fusión y Jugosidad. Es una experiencia más intensa, ideal para quienes buscan sabores ahumados y trozos de carne premium."
+            }
+        };
+
+        let radarChart;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('flavorRadar').getContext('2d');
+            
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Tradición', 'Intensidad', 'Fusión', 'Contundencia', 'Jugosidad'],
+                    datasets: [{
+                        label: flavorData.clasica.label,
+                        data: flavorData.clasica.data,
+                        fill: true,
+                        backgroundColor: flavorData.clasica.color,
+                        borderColor: flavorData.clasica.borderColor,
+                        pointBackgroundColor: flavorData.clasica.borderColor,
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: flavorData.clasica.borderColor
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: {
+                        line: { borderWidth: 3 }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: { display: true, color: '#e5e7eb' },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            grid: { color: '#e5e7eb' },
+                            pointLabels: {
+                                font: { size: 14, weight: 'bold', family: "'Nunito', sans-serif" },
+                                color: '#78350F' // Amber 900
+                            },
+                            ticks: { display: false } // Hide numbers for cleaner look
+                        }
+                    },
+                    plugins: {
+                        legend: { display: true, position: 'bottom', labels: { font: { size: 14 } } }
+                    }
+                }
+            });
+            
+            // Set initial text
+            document.getElementById('flavor-text').innerText = flavorData.clasica.text;
+        });
+
+        function showFlavorProfile(type) {
+            // Scroll to chart
+            document.getElementById('sabores').scrollIntoView({ behavior: 'smooth' });
+
+            // Update Chart
+            const selected = flavorData[type];
+            
+            radarChart.data.datasets[0].label = selected.label;
+            radarChart.data.datasets[0].data = selected.data;
+            radarChart.data.datasets[0].backgroundColor = selected.color;
+            radarChart.data.datasets[0].borderColor = selected.borderColor;
+            radarChart.data.datasets[0].pointBackgroundColor = selected.borderColor;
+            radarChart.data.datasets[0].pointHoverBorderColor = selected.borderColor;
+            
+            radarChart.update();
+
+            // Update Text Description with Fade Effect
+            const textElem = document.getElementById('flavor-text');
+            textElem.style.opacity = 0;
+            setTimeout(() => {
+                textElem.innerText = selected.text;
+                textElem.style.opacity = 1;
+            }, 200);
+        }
+
+        // Simple smooth scrolling for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
