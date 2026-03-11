@@ -3,364 +3,809 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deli Papa - El Sabor de la Tradición</title>
+    <title>Corporación Imperium - Sistema LegalTech</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts: Playfair Display para elegancia jurídica, Inter para UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        imperium: {
+                            900: '#0A192F', // Azul Oscuro Corporativo
+                            800: '#112240', // Azul Oscuro Secundario
+                            700: '#233554', // Hover states
+                            gold: '#C5A059', // Dorado Elegante
+                            goldHover: '#D4AF37', // Dorado Brillante
+                            light: '#F8FAFC', // Gris/Blanco fondo
+                            border: '#E2E8F0' // Gris bordes
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+        /* Transiciones de Vistas */
+        .view-section { display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .view-section.active { display: block; opacity: 1; animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         
-        body {
-            font-family: 'Nunito', sans-serif;
-            background-color: #FFF8E1; /* Amber 50 - Creamy background */
-        }
+        /* Custom Scrollbar Premium */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
 
-        h1, h2, h3 {
-            font-family: 'Fredoka One', cursive; /* Friendly, rounded font for titles */
+        /* Timeline Styles */
+        .timeline-item::before {
+            content: ''; position: absolute; left: -25px; top: 4px; width: 12px; height: 12px;
+            border-radius: 50%; background-color: #C5A059; border: 2px solid white; z-index: 10;
         }
-
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            height: 300px;
+        .timeline-item::after {
+            content: ''; position: absolute; left: -20px; top: 16px; bottom: -24px; width: 2px;
+            background-color: #E2E8F0; z-index: 5;
         }
-
-        /* Custom animation for the "Order" button */
-        @keyframes pulse-custom {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        .timeline-item:last-child::after { display: none; }
+        
+        /* Formularios Premium */
+        .form-input-premium {
+            width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #E2E8F0; border-radius: 0.5rem;
+            font-size: 0.875rem; transition: all 0.2s; outline: none; background-color: #FAFAFA;
         }
-        .btn-pulse {
-            animation: pulse-custom 2s infinite;
-        }
-
-        .product-card {
-            transition: all 0.3s ease;
-        }
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-
-        .ingredient-pill {
-            transition: all 0.2s;
-        }
-        .ingredient-pill:hover {
-            background-color: #FFF;
-            transform: scale(1.1);
-            cursor: default;
+        .form-input-premium:focus {
+            border-color: #C5A059; box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.15); background-color: #FFFFFF;
         }
     </style>
 </head>
-<body class="text-amber-900">
+<body class="bg-imperium-light text-slate-800 font-sans h-screen flex overflow-hidden">
 
-    <!-- Navbar -->
-    <nav class="bg-amber-600 text-white shadow-lg sticky top-0 z-50 transition-colors duration-300">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-utensils text-2xl"></i>
-                <span class="text-2xl tracking-wide font-normal">Deli Papa</span>
-            </div>
-            <div class="hidden md:flex space-x-6 font-bold">
-                <a href="#menu" class="hover:text-amber-200 transition">Nuestras Papas</a>
-                <a href="#sabores" class="hover:text-amber-200 transition">Experiencia</a>
-                <a href="#cultura" class="hover:text-amber-200 transition">Nosotros</a>
-            </div>
-            <a href="#contacto" class="bg-white text-amber-700 px-4 py-1 rounded-full font-bold hover:bg-amber-100 transition shadow-md">
-                <i class="fas fa-motorcycle mr-1"></i> Pedir
-            </a>
-        </div>
-    </nav>
-
-    <!-- Hero Section con Imagen de Fondo -->
-    <!-- 
-        =================================================================================
-        ¡HOLA! AQUÍ ES DONDE CAMBIAS LA IMAGEN DE FONDO.
-        Busca abajo donde dice url('...') y pon el enlace de tu propia foto dentro de las comillas.
-        
-        El código "linear-gradient" añade un filtro naranja transparente para que el texto se lea bien.
-        =================================================================================
-    -->
-    <header class="relative bg-cover bg-center pt-24 pb-32 px-4 text-center overflow-hidden rounded-b-[3rem] shadow-xl" 
-            style="background-image: linear-gradient(to bottom, rgba(217, 119, 6, 0.85), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?q=80&w=2070&auto=format&fit=crop');">
-            <!-- NOTA: La imagen actual es de demostración (comida peruana/fritura). Reemplaza el link de unsplash arriba. -->
-
-        <div class="max-w-4xl mx-auto relative z-10">
-            <h1 class="text-6xl md:text-8xl mb-4 text-white drop-shadow-lg tracking-wide">Deli Papa</h1>
-            <p class="text-xl md:text-2xl font-bold mb-8 max-w-2xl mx-auto text-amber-50 drop-shadow-md">
-                Donde la tradición peruana se rellena de sabor. <br>
-                <span class="font-normal italic mt-2 block opacity-90">Cultural. Amigable. Delicioso.</span>
-            </p>
-            <div class="flex justify-center space-x-4">
-                <a href="#menu" class="bg-white text-amber-700 px-8 py-3 rounded-full font-bold text-lg shadow-lg hover:bg-amber-50 transition transform hover:scale-105 border-b-4 border-amber-800">
-                    Ver Menú
-                </a>
-            </div>
-        </div>
-    </header>
-
-    <!-- MAIN MENU SECTION -->
-    <section id="menu" class="max-w-6xl mx-auto px-4 py-16 -mt-12 relative z-20">
-        <div class="text-center mb-12">
-            <span class="bg-orange-100 text-orange-700 px-4 py-1 rounded-full text-sm font-bold uppercase tracking-wider shadow-sm">Nuestras Especialidades</span>
-            <h2 class="text-4xl text-amber-900 mt-4">Dos Estilos, Un Solo Amor</h2>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- ================= PANTALLA DE LOGIN ================= -->
+    <div id="login-view" class="fixed inset-0 bg-imperium-900 z-50 flex items-center justify-center view-section active">
+        <div class="absolute inset-0 opacity-10" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
+        <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md p-8 overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-imperium-gold"></div>
             
-            <!-- Papa Clásica Card -->
-            <article class="product-card bg-white rounded-3xl shadow-xl overflow-hidden border-2 border-transparent hover:border-amber-400">
-                <div class="h-48 bg-amber-200 flex items-center justify-center relative bg-[url('https://www.transparenttextures.com/patterns/food.png')]">
-                    <!-- Icono Gigante -->
-                    <div class="text-9xl transform transition hover:scale-110 cursor-pointer drop-shadow-md" onclick="toggleDetails('clasica')">🥔</div>
-                    <div class="absolute bottom-4 right-4 bg-white px-3 py-1 rounded-full text-xs font-bold text-amber-800 shadow">Top Seller</div>
+            <div class="text-center mb-8 mt-4">
+                <div class="mx-auto w-16 h-16 bg-imperium-900 rounded-full flex items-center justify-center mb-4 border-2 border-imperium-gold shadow-lg shadow-imperium-gold/20">
+                    <i data-lucide="scale" class="w-8 h-8 text-imperium-gold"></i>
                 </div>
-                <div class="p-8">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-3xl text-amber-900">La Clásica</h3>
-                        <span class="text-2xl font-bold text-orange-600">$4.000</span>
-                    </div>
-                    <p class="text-gray-600 mb-6 text-lg">
-                        El sabor que te transporta a casa. Crujiente por fuera, suave por dentro, con el guiso de la abuela.
-                    </p>
-                    
-                    <!-- Interactive Ingredients -->
-                    <div class="mb-6">
-                        <h4 class="text-sm font-bold text-gray-400 uppercase mb-2">Lo que lleva dentro:</h4>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="ingredient-pill bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold border border-yellow-200">Carne Molida</span>
-                            <span class="ingredient-pill bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold border border-yellow-200">Huevo Duro</span>
-                            <span class="ingredient-pill bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold border border-yellow-200">Aceituna</span>
-                            <span class="ingredient-pill bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold border border-yellow-200">Guiso Criollo</span>
-                        </div>
-                    </div>
+                <h1 class="font-serif text-2xl font-bold text-imperium-900 leading-tight">Corporación Imperium</h1>
+                <p class="text-xs text-slate-500 mt-2 uppercase tracking-widest font-semibold">Plataforma de Resolución de Disputas</p>
+            </div>
 
-                    <button onclick="showFlavorProfile('clasica')" class="w-full py-3 border-2 border-amber-500 text-amber-600 rounded-xl font-bold hover:bg-amber-500 hover:text-white transition">
-                        Ver Perfil de Sabor
-                    </button>
+            <form onsubmit="handleLogin(event)" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Usuario / Credencial</label>
+                    <div class="relative">
+                        <i data-lucide="user" class="absolute left-3 top-2.5 h-5 w-5 text-slate-400"></i>
+                        <input type="text" value="admin" class="form-input-premium pl-10" required>
+                    </div>
                 </div>
-            </article>
-
-            <!-- Papa Lomo Saltado Card -->
-            <article class="product-card bg-white rounded-3xl shadow-xl overflow-hidden border-2 border-transparent hover:border-red-400">
-                <div class="h-48 bg-red-100 flex items-center justify-center relative bg-[url('https://www.transparenttextures.com/patterns/food.png')]">
-                    <!-- Icono Gigante -->
-                    <div class="text-9xl transform transition hover:scale-110 cursor-pointer drop-shadow-md" onclick="toggleDetails('lomo')">🥘</div>
-                    <div class="absolute bottom-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow">Premium</div>
-                </div>
-                <div class="p-8">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-3xl text-red-900">Lomo Saltado</h3>
-                        <span class="text-2xl font-bold text-red-600">$6.500</span>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Contraseña de Acceso</label>
+                    <div class="relative">
+                        <i data-lucide="lock" class="absolute left-3 top-2.5 h-5 w-5 text-slate-400"></i>
+                        <input type="password" value="12345" class="form-input-premium pl-10" required>
                     </div>
-                    <p class="text-gray-600 mb-6 text-lg">
-                        Fusión peruana explosiva. Trozos de lomo fino flambeados al wok dentro de nuestra masa dorada.
-                    </p>
-                    
-                    <!-- Interactive Ingredients -->
-                    <div class="mb-6">
-                        <h4 class="text-sm font-bold text-gray-400 uppercase mb-2">Ingredientes Premium:</h4>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="ingredient-pill bg-red-50 text-red-800 px-3 py-1 rounded-full text-sm font-semibold border border-red-200">Lomo Fino</span>
-                            <span class="ingredient-pill bg-red-50 text-red-800 px-3 py-1 rounded-full text-sm font-semibold border border-red-200">Cebolla Roja</span>
-                            <span class="ingredient-pill bg-red-50 text-red-800 px-3 py-1 rounded-full text-sm font-semibold border border-red-200">Tomate</span>
-                            <span class="ingredient-pill bg-red-50 text-red-800 px-3 py-1 rounded-full text-sm font-semibold border border-red-200">Toque de Sillao</span>
-                        </div>
-                    </div>
-
-                    <button onclick="showFlavorProfile('lomo')" class="w-full py-3 border-2 border-red-500 text-red-600 rounded-xl font-bold hover:bg-red-500 hover:text-white transition">
-                        Ver Perfil de Sabor
-                    </button>
                 </div>
-            </article>
-
+                <button type="submit" class="w-full bg-imperium-900 text-white font-medium py-2.5 rounded-lg hover:bg-imperium-800 transition shadow-lg shadow-imperium-900/30 flex justify-center items-center mt-6">
+                    Ingresar al Sistema <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                </button>
+            </form>
         </div>
-    </section>
+    </div>
 
-    <!-- FLAVOR PROFILE SECTION (Interactive Chart) -->
-    <section id="sabores" class="bg-white py-16 shadow-inner relative overflow-hidden">
-        <!-- Decoration -->
-        <div class="absolute -right-20 top-10 text-9xl text-amber-50 opacity-50 rotate-12 z-0">🥔</div>
+    <!-- ================= APLICACIÓN PRINCIPAL ================= -->
+    <div id="app-layout" class="hidden w-full h-full flex">
+        
+        <!-- SIDEBAR (Menú Lateral) -->
+        <aside class="w-64 bg-imperium-900 text-slate-300 flex flex-col h-full border-r border-imperium-800 transition-all z-20 shadow-xl relative">
+            
+            <!-- Logo Area -->
+            <div class="h-16 flex items-center px-6 border-b border-imperium-800 bg-imperium-900">
+                <i data-lucide="scale" class="w-6 h-6 text-imperium-gold mr-3"></i>
+                <div>
+                    <h2 class="font-serif text-lg font-bold text-white tracking-wide leading-none">Imperium</h2>
+                    <span class="text-[10px] text-imperium-gold uppercase tracking-wider">LegalTech Suite</span>
+                </div>
+            </div>
 
-        <div class="max-w-4xl mx-auto px-4 relative z-10">
-            <div class="flex flex-col md:flex-row items-center gap-12">
-                <div class="md:w-1/2">
-                    <span class="text-orange-500 font-bold uppercase text-sm tracking-wider">Radar de Sabores</span>
-                    <h2 class="text-3xl text-amber-900 mb-4 mt-2">¿Cuál es tu antojo hoy?</h2>
-                    <p class="text-gray-600 mb-6 text-lg leading-relaxed">
-                        En <span class="font-bold text-amber-600">Deli Papa</span>, cada papa tiene personalidad. 
-                        Usa nuestro visualizador para entender la diferencia entre la tradición hogareña y la intensidad de la fusión.
-                    </p>
+            <!-- Navegación Dinámica -->
+            <div class="flex-1 overflow-y-auto py-4 custom-scrollbar">
+                <nav class="space-y-1 px-3">
+                    <p class="px-3 text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-2 mt-2">Principal</p>
+                    <a href="#" onclick="nav('dashboard')" class="nav-btn flex items-center px-3 py-2 text-sm rounded-lg text-slate-300 hover:bg-imperium-800 hover:text-white transition border-l-4 border-transparent">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4 mr-3"></i> Dashboard
+                    </a>
                     
-                    <div class="bg-amber-50 p-6 rounded-2xl border-l-4 border-amber-400 shadow-sm">
-                        <h4 class="font-bold text-amber-800 mb-2"><i class="fas fa-info-circle mr-2"></i>El dato cultural:</h4>
-                        <p id="flavor-text" class="text-sm text-gray-700 italic">
-                            Selecciona "Ver Perfil de Sabor" en una de las papas arriba para comparar.
-                        </p>
+                    <p class="px-3 text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-2 mt-6">Gestión de Casos</p>
+                    <a href="#" onclick="nav('expedientes')" class="nav-btn flex items-center px-3 py-2 text-sm rounded-lg hover:bg-imperium-800 hover:text-white transition border-l-4 border-transparent">
+                        <i data-lucide="folder-open" class="w-4 h-4 mr-3"></i> Todos los Expedientes
+                    </a>
+                    <a href="#" onclick="nav('conciliacion')" class="nav-btn flex items-center px-3 py-2 text-sm rounded-lg hover:bg-imperium-800 hover:text-white transition border-l-4 border-transparent ml-2 text-slate-400">
+                        <i data-lucide="users" class="w-4 h-4 mr-3"></i> Conciliación
+                    </a>
+                    <a href="#" onclick="nav('arbitraje')" class="nav-btn flex items-center px-3 py-2 text-sm rounded-lg hover:bg-imperium-800 hover:text-white transition border-l-4 border-transparent ml-2 text-slate-400">
+                        <i data-lucide="gavel" class="w-4 h-4 mr-3"></i> Arbitraje
+                    </a>
+                    <a href="#" onclick="nav('jrd')" class="nav-btn flex items-center px-3 py-2 text-sm rounded-lg hover:bg-imperium-800 hover:text-white transition border-l-4 border-transparent ml-2 text-slate-400">
+                        <i data-lucide="briefcase" class="w-4 h-4 mr-3"></i> JRD
+                    </a>
+                    <a href="#" onclick="nav('documentos')" class="nav-btn flex items-center px-3 py-2 text-sm rounded-lg hover:bg-imperium-800 hover:text-white transition border-l-4 border-transparent mt-2">
+                        <i data-lucide="folder-archive" class="w-4 h-4 mr-3"></i> Gestor Documental
+                    </a>
+
+                    <p class="px-3 text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-2 mt-6">Administración</p>
+                    <a href="#" onclick="nav('personas')" class="nav-btn flex items-center px-3 py-2 text-sm rounded-lg hover:bg-imperium-800 hover:text-white transition border-l-4 border-transparent">
+                        <i data-lucide="contact" class="w-4 h-4 mr-3"></i> Personas y Empresas
+                    </a>
+                    <a href="#" onclick="alert('Agenda en desarrollo')" class="nav-btn flex items-center px-3 py-2 text-sm rounded-lg hover:bg-imperium-800 hover:text-white transition border-l-4 border-transparent">
+                        <i data-lucide="calendar-days" class="w-4 h-4 mr-3"></i> Agenda y Audiencias
+                    </a>
+                    <a href="#" onclick="nav('pagos')" class="nav-btn flex items-center px-3 py-2 text-sm rounded-lg hover:bg-imperium-800 hover:text-white transition border-l-4 border-transparent">
+                        <i data-lucide="credit-card" class="w-4 h-4 mr-3"></i> Pagos y Tarifas
+                    </a>
+                    
+                    <p class="px-3 text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-2 mt-6">Sistema</p>
+                    <a href="#" onclick="nav('reportes')" class="nav-btn flex items-center px-3 py-2 text-sm rounded-lg hover:bg-imperium-800 hover:text-white transition border-l-4 border-transparent">
+                        <i data-lucide="bar-chart-3" class="w-4 h-4 mr-3"></i> Reportes y BI
+                    </a>
+                    <a href="#" onclick="nav('usuarios')" class="nav-btn flex items-center px-3 py-2 text-sm rounded-lg hover:bg-imperium-800 hover:text-white transition border-l-4 border-transparent">
+                        <i data-lucide="shield-check" class="w-4 h-4 mr-3"></i> Usuarios y Roles
+                    </a>
+                    <a href="#" onclick="nav('configuracion')" class="nav-btn flex items-center px-3 py-2 text-sm rounded-lg hover:bg-imperium-800 hover:text-white transition border-l-4 border-transparent">
+                        <i data-lucide="settings" class="w-4 h-4 mr-3"></i> Configuración
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Perfil de Usuario -->
+            <div class="p-4 border-t border-imperium-800 bg-imperium-900">
+                <div class="flex items-center">
+                    <img src="https://ui-avatars.com/api/?name=Admin+Imperium&background=C5A059&color=fff&font-size=0.4" alt="User" class="w-9 h-9 rounded-full border border-imperium-gold">
+                    <div class="ml-3 overflow-hidden">
+                        <p class="text-sm font-medium text-white truncate">Dr. Mendoza</p>
+                        <p class="text-[10px] text-imperium-gold uppercase tracking-wider truncate">Director General</p>
                     </div>
+                    <button onclick="logout()" class="ml-auto text-slate-400 hover:text-white transition" title="Cerrar Sesión">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 flex flex-col h-full bg-slate-50 relative">
+            
+            <!-- Header Superior -->
+            <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-10 shadow-sm">
+                <div class="flex items-center">
+                    <button class="md:hidden mr-4 text-slate-500 hover:text-imperium-900">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                    <!-- Título Dinámico -->
+                    <h2 id="page-title" class="text-xl font-serif font-bold text-imperium-900 tracking-wide">Dashboard Institucional</h2>
                 </div>
                 
-                <div class="md:w-1/2 w-full">
-                    <div class="chart-container">
-                        <canvas id="flavorRadar"></canvas>
+                <div class="flex items-center space-x-5">
+                    <div class="relative hidden md:block">
+                        <i data-lucide="search" class="absolute left-3 top-2 h-4 w-4 text-slate-400"></i>
+                        <input type="text" placeholder="Buscar expediente..." class="pl-9 pr-4 py-1.5 w-64 bg-slate-100 border-transparent rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-imperium-gold focus:bg-white transition">
+                    </div>
+                    <button class="relative text-slate-400 hover:text-imperium-gold transition">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white border border-white">3</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- CONTENEDOR DE VISTAS -->
+            <div class="flex-1 overflow-y-auto p-6 lg:p-8 custom-scrollbar relative">
+                
+                <!-- ================= VISTA 1: DASHBOARD ================= -->
+                <div id="view-dashboard" class="view-section">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 relative overflow-hidden group hover:border-imperium-gold transition">
+                            <div class="absolute right-0 top-0 h-full w-1 bg-imperium-gold"></div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Expedientes</p>
+                            <h4 class="text-3xl font-bold text-imperium-900 font-serif">142</h4>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 relative overflow-hidden group hover:border-imperium-gold transition">
+                            <div class="absolute right-0 top-0 h-full w-1 bg-imperium-900"></div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Arbitrajes Activos</p>
+                            <h4 class="text-3xl font-bold text-imperium-900 font-serif">28</h4>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 relative overflow-hidden group hover:border-imperium-gold transition">
+                            <div class="absolute right-0 top-0 h-full w-1 bg-green-500"></div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Tasa Acuerdos</p>
+                            <h4 class="text-3xl font-bold text-imperium-900 font-serif">76%</h4>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 relative overflow-hidden group hover:border-imperium-gold transition">
+                            <div class="absolute right-0 top-0 h-full w-1 bg-amber-500"></div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Audiencias Semana</p>
+                            <h4 class="text-3xl font-bold text-imperium-900 font-serif">15</h4>
+                        </div>
+                    </div>
+                    <!-- Banner de Bienvenida -->
+                    <div class="bg-imperium-900 rounded-xl p-8 text-white relative overflow-hidden shadow-lg shadow-imperium-900/20 mb-8">
+                        <div class="absolute top-0 right-0 opacity-10"><i data-lucide="scale" class="w-64 h-64 -mt-10 -mr-10"></i></div>
+                        <div class="relative z-10">
+                            <h3 class="text-2xl font-serif font-bold mb-2 text-imperium-gold">Bienvenido a la Suite Imperium</h3>
+                            <p class="text-slate-300 max-w-2xl text-sm">El sistema opera con total normalidad. Tiene 3 audiencias programadas para el día de hoy y 5 expedientes pendientes de asignación de conciliador.</p>
+                            <button onclick="nav('nuevo-expediente')" class="mt-6 bg-imperium-gold text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-imperium-goldHover transition shadow-md flex items-center">
+                                <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Iniciar Nuevo Expediente
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- CULTURAL SECTION -->
-    <section id="cultura" class="py-16 px-4">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl text-amber-900 mb-8">Más que Comida, es Cultura</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition">
-                    <div class="text-4xl text-orange-500 mb-4"><i class="fas fa-hand-holding-heart"></i></div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Servicio Amigable</h3>
-                    <p class="text-gray-600">Aquí no eres un cliente, eres un "vecino". Te atendemos con la calidez de casa.</p>
+                <!-- ================= VISTA 2: LISTA DE EXPEDIENTES ================= -->
+                <div id="view-expedientes" class="view-section">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-serif font-bold text-imperium-900">Todos los Expedientes</h3>
+                        <button onclick="nav('nuevo-expediente')" class="bg-imperium-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-imperium-800 transition flex items-center shadow-md">
+                            <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Crear Expediente
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-slate-50 text-slate-500 uppercase text-xs font-bold border-b border-slate-200">
+                                <tr>
+                                    <th class="px-6 py-4">N° Expediente</th>
+                                    <th class="px-6 py-4">Servicio</th>
+                                    <th class="px-6 py-4">Partes</th>
+                                    <th class="px-6 py-4">Estado</th>
+                                    <th class="px-6 py-4 text-center">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100" id="tabla-expedientes">
+                                <!-- JS Inyecta data aquí -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition">
-                    <div class="text-4xl text-orange-500 mb-4"><i class="fas fa-history"></i></div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Receta Ancestral</h3>
-                    <p class="text-gray-600">Respetamos la técnica. Masa 100% natural, sin aditivos, prensada a mano cada mañana.</p>
-                </div>
-                <div class="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition">
-                    <div class="text-4xl text-orange-500 mb-4"><i class="fas fa-users"></i></div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Punto de Encuentro</h3>
-                    <p class="text-gray-600">Deli Papa es el lugar para compartir. Comida honesta para gente auténtica.</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- FOOTER / CONTACT -->
-    <footer id="contacto" class="bg-amber-900 text-amber-100 py-12">
-        <div class="max-w-4xl mx-auto px-4 text-center">
-            <h2 class="text-3xl mb-6 font-fredoka">¿Listo para probar?</h2>
-            <p class="mb-8 text-xl">Visítanos o pide a domicilio.</p>
-            
-            <button class="btn-pulse bg-green-500 text-white px-8 py-4 rounded-full font-bold text-xl shadow-lg hover:bg-green-600 transition flex items-center justify-center mx-auto gap-3">
-                <i class="fab fa-whatsapp text-3xl"></i>
-                Haz tu pedido por WhatsApp
-            </button>
+                <!-- ================= VISTA 3: NUEVO EXPEDIENTE (FORMULARIO PREMIUM) ================= -->
+                <div id="view-nuevo-expediente" class="view-section max-w-5xl mx-auto">
+                    <div class="mb-6 flex justify-between items-end">
+                        <div>
+                            <div class="flex items-center text-xs text-slate-500 mb-2">
+                                <a href="#" onclick="nav('expedientes')" class="hover:text-imperium-gold">Expedientes</a>
+                                <i data-lucide="chevron-right" class="w-3 h-3 mx-1"></i>
+                                <span class="font-medium text-slate-700">Nuevo Registro</span>
+                            </div>
+                            <h3 class="text-2xl font-serif font-bold text-imperium-900">Apertura de Expediente Legal</h3>
+                            <p class="text-sm text-slate-500 mt-1">Complete los datos formales para el ingreso a Mesa de Partes.</p>
+                        </div>
+                    </div>
 
-            <div class="mt-12 pt-8 border-t border-amber-800 text-sm text-amber-400">
-                <p>&copy; 2024 Deli Papa. Todos los derechos reservados.</p>
-                <div class="flex justify-center space-x-4 mt-4 text-xl">
-                    <a href="#" class="hover:text-white transition"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="hover:text-white transition"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="hover:text-white transition"><i class="fab fa-tiktok"></i></a>
+                    <form class="space-y-6" onsubmit="event.preventDefault(); alert('Expediente Guardado Exitosamente. N° Generado: 143-2026'); nav('expedientes');">
+                        <!-- Card 1: Tipo de Servicio -->
+                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                            <h4 class="font-serif font-bold text-lg text-imperium-900 mb-4 flex items-center border-b border-slate-100 pb-2">
+                                <i data-lucide="scale" class="w-5 h-5 mr-2 text-imperium-gold"></i> 1. Tipo de Procedimiento
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <label class="border border-slate-200 rounded-lg p-4 cursor-pointer hover:border-imperium-gold hover:bg-slate-50 transition relative">
+                                    <input type="radio" name="tipo_proc" class="absolute top-4 right-4 text-imperium-gold focus:ring-imperium-gold" checked>
+                                    <i data-lucide="users" class="w-6 h-6 text-slate-400 mb-2"></i>
+                                    <p class="font-bold text-sm text-imperium-900">Conciliación Extrajudicial</p>
+                                    <p class="text-xs text-slate-500 mt-1">Ley N° 26872</p>
+                                </label>
+                                <label class="border border-slate-200 rounded-lg p-4 cursor-pointer hover:border-imperium-gold hover:bg-slate-50 transition relative">
+                                    <input type="radio" name="tipo_proc" class="absolute top-4 right-4 text-imperium-gold focus:ring-imperium-gold">
+                                    <i data-lucide="gavel" class="w-6 h-6 text-slate-400 mb-2"></i>
+                                    <p class="font-bold text-sm text-imperium-900">Arbitraje Institucional</p>
+                                    <p class="text-xs text-slate-500 mt-1">D.L. N° 1071</p>
+                                </label>
+                                <label class="border border-slate-200 rounded-lg p-4 cursor-pointer hover:border-imperium-gold hover:bg-slate-50 transition relative">
+                                    <input type="radio" name="tipo_proc" class="absolute top-4 right-4 text-imperium-gold focus:ring-imperium-gold">
+                                    <i data-lucide="briefcase" class="w-6 h-6 text-slate-400 mb-2"></i>
+                                    <p class="font-bold text-sm text-imperium-900">Junta de Resolución (JRD)</p>
+                                    <p class="text-xs text-slate-500 mt-1">Ley de Contrataciones</p>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Partes -->
+                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                            <h4 class="font-serif font-bold text-lg text-imperium-900 mb-4 flex items-center border-b border-slate-100 pb-2">
+                                <i data-lucide="contact" class="w-5 h-5 mr-2 text-imperium-gold"></i> 2. Sujetos Procesales
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div>
+                                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Solicitante / Demandante</p>
+                                    <div class="space-y-3">
+                                        <input type="text" placeholder="DNI / RUC" class="form-input-premium">
+                                        <input type="text" placeholder="Nombres / Razón Social" class="form-input-premium">
+                                        <input type="email" placeholder="Correo Electrónico Legal" class="form-input-premium">
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Invitado / Demandado</p>
+                                    <div class="space-y-3">
+                                        <input type="text" placeholder="DNI / RUC" class="form-input-premium">
+                                        <input type="text" placeholder="Nombres / Razón Social" class="form-input-premium">
+                                        <input type="text" placeholder="Dirección a Notificar" class="form-input-premium">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Materia -->
+                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                            <h4 class="font-serif font-bold text-lg text-imperium-900 mb-4 flex items-center border-b border-slate-100 pb-2">
+                                <i data-lucide="file-text" class="w-5 h-5 mr-2 text-imperium-gold"></i> 3. Materia y Pretensión
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1">Materia Específica</label>
+                                    <select class="form-input-premium bg-white">
+                                        <option>Obligación de dar suma de dinero</option>
+                                        <option>Desalojo por Ocupación Precaria</option>
+                                        <option>Resolución de Contrato</option>
+                                        <option>Ampliación de Plazo de Obra</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1">Cuantía / Monto (S/)</label>
+                                    <input type="number" placeholder="Ej. 150000.00" class="form-input-premium">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1">Resumen de la Controversia</label>
+                                <textarea rows="3" placeholder="Hechos principales..." class="form-input-premium"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end space-x-4">
+                            <button type="button" class="px-6 py-2.5 text-sm font-semibold text-slate-600 border border-slate-300 rounded-lg hover:bg-slate-50 transition">Cancelar</button>
+                            <button type="submit" class="px-6 py-2.5 text-sm font-semibold text-white bg-imperium-gold rounded-lg hover:bg-imperium-goldHover transition shadow-md flex items-center">
+                                <i data-lucide="save" class="w-4 h-4 mr-2"></i> Generar Expediente y Carátula
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </div>
-        </div>
-    </footer>
 
+                <!-- ================= VISTAS MÓDULOS (Conciliación, Arbitraje, JRD) ================= -->
+                <div id="view-conciliacion" class="view-section text-center py-20">
+                    <i data-lucide="users" class="w-16 h-16 text-imperium-gold mx-auto mb-4"></i>
+                    <h3 class="text-3xl font-serif font-bold text-imperium-900">Módulo de Conciliación</h3>
+                    <p class="text-slate-500 max-w-lg mx-auto mt-2">Área exclusiva para la gestión de audiencias extrajudiciales, control de actas y designación de conciliadores autorizados por el MINJUS.</p>
+                </div>
+
+                <div id="view-arbitraje" class="view-section text-center py-20">
+                    <i data-lucide="gavel" class="w-16 h-16 text-imperium-gold mx-auto mb-4"></i>
+                    <h3 class="text-3xl font-serif font-bold text-imperium-900">Centro de Arbitraje Institucional</h3>
+                    <p class="text-slate-500 max-w-lg mx-auto mt-2">Gestión de tribunales arbitrales, control de cronología procesal, laudos y honorarios arbitrales.</p>
+                </div>
+
+                <div id="view-jrd" class="view-section text-center py-20">
+                    <i data-lucide="briefcase" class="w-16 h-16 text-imperium-gold mx-auto mb-4"></i>
+                    <h3 class="text-3xl font-serif font-bold text-imperium-900">Junta de Resolución de Disputas</h3>
+                    <p class="text-slate-500 max-w-lg mx-auto mt-2">Control de contratos de obra pública, visitas a obra, sesiones de la junta y emisión de decisiones vinculantes.</p>
+                </div>
+
+                <!-- ================= VISTA: GESTOR DOCUMENTAL (AGRUPADO POR CASO) ================= -->
+                <div id="view-documentos" class="view-section max-w-6xl mx-auto">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                        <div>
+                            <h3 class="text-2xl font-serif font-bold text-imperium-900">Repositorio Documental</h3>
+                            <p class="text-sm text-slate-500 mt-1">Todos los archivos y evidencias organizados por número de expediente.</p>
+                        </div>
+                        <div class="mt-4 md:mt-0 flex space-x-3">
+                            <div class="relative w-full md:w-64">
+                                <i data-lucide="search" class="absolute left-3 top-2.5 h-4 w-4 text-slate-400"></i>
+                                <input type="text" placeholder="Buscar expediente o archivo..." class="form-input-premium pl-9 w-full">
+                            </div>
+                            <button class="bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 shadow-sm flex items-center">
+                                <i data-lucide="filter" class="w-4 h-4 mr-2"></i> Filtrar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- GRUPO EXPEDIENTE 1 -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 mb-6 overflow-hidden group">
+                        <!-- Cabecera del Acordeón / Grupo -->
+                        <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex flex-col md:flex-row justify-between items-start md:items-center cursor-pointer hover:bg-slate-100 transition">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-lg bg-imperium-100 text-imperium-900 flex items-center justify-center mr-4 border border-imperium-200">
+                                    <i data-lucide="folder" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-imperium-900 text-base">Expediente: 142-2026-ARB</h4>
+                                    <p class="text-xs text-slate-500 font-medium">Constructora ABC vs Min. Transportes (Arbitraje)</p>
+                                </div>
+                            </div>
+                            <div class="mt-3 md:mt-0 flex items-center space-x-4">
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-bold">3 Archivos</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 group-hover:text-imperium-gold"></i>
+                            </div>
+                        </div>
+                        <!-- Tabla de Archivos del Grupo -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-white text-slate-400 text-xs uppercase font-bold border-b border-slate-100">
+                                    <tr>
+                                        <th class="px-6 py-3">Nombre del Archivo</th>
+                                        <th class="px-6 py-3">Tipo / Etiqueta</th>
+                                        <th class="px-6 py-3">Fecha de Subida</th>
+                                        <th class="px-6 py-3">Usuario / Autor</th>
+                                        <th class="px-6 py-3 text-right">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    <tr class="hover:bg-slate-50 transition">
+                                        <td class="px-6 py-3 font-medium text-slate-800 flex items-center">
+                                            <i data-lucide="file-text" class="w-4 h-4 text-red-500 mr-2 shrink-0"></i> Resolucion_01_Pruebas.pdf
+                                        </td>
+                                        <td class="px-6 py-3"><span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-slate-200">Resolución</span></td>
+                                        <td class="px-6 py-3 text-slate-500 text-xs">14/03/2026</td>
+                                        <td class="px-6 py-3 text-slate-500 text-xs">Tribunal Arbitral</td>
+                                        <td class="px-6 py-3 text-right">
+                                            <button class="text-imperium-gold hover:text-imperium-goldHover font-medium text-xs mr-3">Ver</button>
+                                            <button class="text-slate-400 hover:text-imperium-900"><i data-lucide="download" class="w-4 h-4 inline"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50 transition">
+                                        <td class="px-6 py-3 font-medium text-slate-800 flex items-center">
+                                            <i data-lucide="video" class="w-4 h-4 text-blue-500 mr-2 shrink-0"></i> Grabacion_Audiencia_Instalacion.mp4
+                                        </td>
+                                        <td class="px-6 py-3"><span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-slate-200">Multimedia</span></td>
+                                        <td class="px-6 py-3 text-slate-500 text-xs">15/03/2026</td>
+                                        <td class="px-6 py-3 text-slate-500 text-xs">Secretaría Arbitral</td>
+                                        <td class="px-6 py-3 text-right">
+                                            <button class="text-imperium-gold hover:text-imperium-goldHover font-medium text-xs mr-3">Ver</button>
+                                            <button class="text-slate-400 hover:text-imperium-900"><i data-lucide="download" class="w-4 h-4 inline"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50 transition">
+                                        <td class="px-6 py-3 font-medium text-slate-800 flex items-center">
+                                            <i data-lucide="folder-archive" class="w-4 h-4 text-green-500 mr-2 shrink-0"></i> Anexos_Demandante_Lote4.zip
+                                        </td>
+                                        <td class="px-6 py-3"><span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-slate-200">Evidencia</span></td>
+                                        <td class="px-6 py-3 text-slate-500 text-xs">10/03/2026</td>
+                                        <td class="px-6 py-3 text-slate-500 text-xs">Mesa de Partes</td>
+                                        <td class="px-6 py-3 text-right">
+                                            <button class="text-slate-400 hover:text-imperium-900"><i data-lucide="download" class="w-4 h-4 inline"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- GRUPO EXPEDIENTE 2 -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 mb-6 overflow-hidden group">
+                        <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex flex-col md:flex-row justify-between items-start md:items-center cursor-pointer hover:bg-slate-100 transition">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-lg bg-imperium-100 text-imperium-900 flex items-center justify-center mr-4 border border-imperium-200">
+                                    <i data-lucide="folder" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-imperium-900 text-base">Expediente: 112-2026-CC</h4>
+                                    <p class="text-xs text-slate-500 font-medium">Inmobiliaria Sur vs Juan Perez (Conciliación)</p>
+                                </div>
+                            </div>
+                            <div class="mt-3 md:mt-0 flex items-center space-x-4">
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-bold">2 Archivos</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 group-hover:text-imperium-gold"></i>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-white text-slate-400 text-xs uppercase font-bold border-b border-slate-100">
+                                    <tr>
+                                        <th class="px-6 py-3">Nombre del Archivo</th>
+                                        <th class="px-6 py-3">Tipo / Etiqueta</th>
+                                        <th class="px-6 py-3">Fecha de Subida</th>
+                                        <th class="px-6 py-3">Usuario / Autor</th>
+                                        <th class="px-6 py-3 text-right">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    <tr class="hover:bg-slate-50 transition">
+                                        <td class="px-6 py-3 font-medium text-slate-800 flex items-center">
+                                            <i data-lucide="file-text" class="w-4 h-4 text-red-500 mr-2 shrink-0"></i> Invitacion_Notificada_Firma.pdf
+                                        </td>
+                                        <td class="px-6 py-3"><span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-slate-200">Notificación</span></td>
+                                        <td class="px-6 py-3 text-slate-500 text-xs">12/03/2026</td>
+                                        <td class="px-6 py-3 text-slate-500 text-xs">Asistente Legal</td>
+                                        <td class="px-6 py-3 text-right">
+                                            <button class="text-imperium-gold hover:text-imperium-goldHover font-medium text-xs mr-3">Ver</button>
+                                            <button class="text-slate-400 hover:text-imperium-900"><i data-lucide="download" class="w-4 h-4 inline"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50 transition">
+                                        <td class="px-6 py-3 font-medium text-slate-800 flex items-center">
+                                            <i data-lucide="image" class="w-4 h-4 text-emerald-500 mr-2 shrink-0"></i> Cargo_Recepcion_Courier.jpg
+                                        </td>
+                                        <td class="px-6 py-3"><span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-slate-200">Cargo</span></td>
+                                        <td class="px-6 py-3 text-slate-500 text-xs">13/03/2026</td>
+                                        <td class="px-6 py-3 text-slate-500 text-xs">Recepción</td>
+                                        <td class="px-6 py-3 text-right">
+                                            <button class="text-imperium-gold hover:text-imperium-goldHover font-medium text-xs mr-3">Ver</button>
+                                            <button class="text-slate-400 hover:text-imperium-900"><i data-lucide="download" class="w-4 h-4 inline"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= VISTA: PERSONAS Y EMPRESAS ================= -->
+                <div id="view-personas" class="view-section">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-serif font-bold text-imperium-900">Directorio de Entidades</h3>
+                        <button class="bg-imperium-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-imperium-800 transition flex items-center">
+                            <i data-lucide="user-plus" class="w-4 h-4 mr-2"></i> Nueva Entidad
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-slate-50 text-slate-500 uppercase text-xs font-bold border-b border-slate-200">
+                                <tr>
+                                    <th class="px-6 py-4">Documento</th>
+                                    <th class="px-6 py-4">Razón Social / Nombres</th>
+                                    <th class="px-6 py-4">Tipo</th>
+                                    <th class="px-6 py-4">Contacto</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr>
+                                    <td class="px-6 py-4 font-mono text-xs">RUC 20123456789</td>
+                                    <td class="px-6 py-4 font-semibold text-imperium-900">Constructora ABC S.A.C.</td>
+                                    <td class="px-6 py-4"><span class="bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs font-bold">Jurídica</span></td>
+                                    <td class="px-6 py-4 text-slate-500">contacto@abc.com.pe</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 font-mono text-xs">DNI 45678912</td>
+                                    <td class="px-6 py-4 font-semibold text-imperium-900">Juan Pérez Gómez</td>
+                                    <td class="px-6 py-4"><span class="bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs font-bold">Natural</span></td>
+                                    <td class="px-6 py-4 text-slate-500">999 888 777</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ================= VISTA: PAGOS Y TARIFAS ================= -->
+                <div id="view-pagos" class="view-section">
+                    <h3 class="text-2xl font-serif font-bold text-imperium-900 mb-6">Gestión Financiera</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-green-500">
+                            <p class="text-xs font-bold text-slate-400 uppercase">Ingresos del Mes</p>
+                            <h4 class="text-2xl font-bold text-imperium-900 mt-1">S/ 45,200.00</h4>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-amber-500">
+                            <p class="text-xs font-bold text-slate-400 uppercase">Honorarios Pendientes</p>
+                            <h4 class="text-2xl font-bold text-imperium-900 mt-1">S/ 12,500.00</h4>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm border-l-4 border-l-imperium-900">
+                            <p class="text-xs font-bold text-slate-400 uppercase">Caja Chica</p>
+                            <h4 class="text-2xl font-bold text-imperium-900 mt-1">S/ 1,200.00</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= VISTA: REPORTES (BI) ================= -->
+                <div id="view-reportes" class="view-section">
+                    <h3 class="text-2xl font-serif font-bold text-imperium-900 mb-6 flex items-center">
+                        <i data-lucide="bar-chart-2" class="w-6 h-6 mr-3 text-imperium-gold"></i> Inteligencia de Negocio
+                    </h3>
+                    <div class="bg-white p-8 rounded-xl border border-slate-200 shadow-sm text-center">
+                        <!-- Placeholder visual para Gráficos -->
+                        <div class="flex justify-center items-end space-x-4 h-48 border-b border-l border-slate-200 p-4 mb-4 max-w-2xl mx-auto">
+                            <div class="w-16 bg-imperium-900 rounded-t" style="height: 60%;"></div>
+                            <div class="w-16 bg-imperium-gold rounded-t" style="height: 40%;"></div>
+                            <div class="w-16 bg-imperium-900 rounded-t" style="height: 80%;"></div>
+                            <div class="w-16 bg-imperium-gold rounded-t" style="height: 50%;"></div>
+                            <div class="w-16 bg-imperium-900 rounded-t" style="height: 100%;"></div>
+                        </div>
+                        <p class="text-sm font-semibold text-slate-500 uppercase">Expedientes Ingresados por Mes (Últimos 5 meses)</p>
+                        <button class="mt-6 text-sm bg-slate-100 text-slate-700 font-bold py-2 px-4 rounded border border-slate-200">Exportar Data a Excel</button>
+                    </div>
+                </div>
+
+                <!-- ================= VISTA: USUARIOS ================= -->
+                <div id="view-usuarios" class="view-section text-center py-20">
+                    <i data-lucide="shield" class="w-16 h-16 text-imperium-900 mx-auto mb-4"></i>
+                    <h3 class="text-3xl font-serif font-bold text-imperium-900">Gestión de Usuarios y Accesos</h3>
+                    <p class="text-slate-500 max-w-lg mx-auto mt-2">Administre los roles: Conciliadores, Árbitros, Secretarios y Asistentes.</p>
+                </div>
+
+                <!-- ================= VISTA: CONFIGURACIÓN ================= -->
+                <div id="view-configuracion" class="view-section max-w-4xl mx-auto">
+                    <h3 class="text-2xl font-serif font-bold text-imperium-900 mb-6">Configuración del Sistema</h3>
+                    
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 flex overflow-hidden min-h-[500px]">
+                        <!-- Tabs Izquierda -->
+                        <div class="w-64 bg-slate-50 border-r border-slate-200 flex flex-col">
+                            <button class="text-left px-5 py-4 text-sm font-bold text-imperium-900 bg-white border-l-4 border-imperium-gold">Datos Institucionales</button>
+                            <button class="text-left px-5 py-4 text-sm font-semibold text-slate-500 hover:bg-slate-100 border-l-4 border-transparent">Formatos y Plantillas</button>
+                            <button class="text-left px-5 py-4 text-sm font-semibold text-slate-500 hover:bg-slate-100 border-l-4 border-transparent">Numeración Automática</button>
+                            <button class="text-left px-5 py-4 text-sm font-semibold text-slate-500 hover:bg-slate-100 border-l-4 border-transparent">Seguridad y Backups</button>
+                        </div>
+                        
+                        <!-- Contenido Derecha -->
+                        <div class="flex-1 p-8">
+                            <h4 class="font-serif font-bold text-lg text-imperium-900 mb-4 border-b border-slate-100 pb-2">Información del Centro</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Razón Social</label>
+                                    <input type="text" value="Asociación Civil Corporación Imperium" class="form-input-premium font-semibold">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">RUC</label>
+                                        <input type="text" value="20000000000" class="form-input-premium">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Resolución MINJUS</label>
+                                        <input type="text" value="Res. N° 001-2020-MINJUS" class="form-input-premium">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Dirección Sede Principal</label>
+                                    <input type="text" value="Av. Legalidad 123, Oficina 404, Lima" class="form-input-premium">
+                                </div>
+                                <div class="pt-4">
+                                    <button class="bg-imperium-900 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-imperium-800 transition">
+                                        Guardar Cambios
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- End Vistas Container -->
+        </main>
+    </div>
+
+    <!-- SCRIPTS / LÓGICA FRONTEND -->
     <script>
-        // Data for Chart
-        const flavorData = {
-            clasica: {
-                label: 'La Clásica',
-                data: [90, 40, 20, 80, 60], // Tradición, Picante, Fusión, Contundencia, Jugosidad
-                color: 'rgba(245, 158, 11, 0.6)', // Amber
-                borderColor: 'rgba(245, 158, 11, 1)',
-                text: "La Clásica es un abrazo al corazón. Destaca por su alto nivel de Tradición y Contundencia. Es el sabor equilibrado que esperas, con una jugosidad perfecta gracias al guiso casero."
-            },
-            lomo: {
-                label: 'Lomo Saltado',
-                data: [50, 60, 95, 85, 90], // Tradición, Picante, Fusión, Contundencia, Jugosidad
-                color: 'rgba(239, 68, 68, 0.6)', // Red
-                borderColor: 'rgba(239, 68, 68, 1)',
-                text: "El Lomo Saltado es una explosión. Domina en Fusión y Jugosidad. Es una experiencia más intensa, ideal para quienes buscan sabores ahumados y trozos de carne premium."
-            }
+        lucide.createIcons();
+
+        // -----------------------------------------------------
+        // Lógica de Vistas (Navegación Robusta SPA)
+        // -----------------------------------------------------
+        const titulosVistas = {
+            'dashboard': 'Dashboard Institucional',
+            'expedientes': 'Todos los Expedientes',
+            'nuevo-expediente': 'Registro de Nuevo Expediente',
+            'conciliacion': 'Módulo de Conciliación',
+            'arbitraje': 'Centro de Arbitraje',
+            'jrd': 'Junta de Resolución de Disputas',
+            'documentos': 'Repositorio Documental por Caso',
+            'personas': 'Directorio de Personas',
+            'pagos': 'Gestión Financiera',
+            'reportes': 'Inteligencia de Negocio',
+            'usuarios': 'Control de Accesos',
+            'configuracion': 'Configuración del Sistema'
         };
 
-        let radarChart;
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const ctx = document.getElementById('flavorRadar').getContext('2d');
+        function handleLogin(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Autenticando...';
+            lucide.createIcons();
             
-            radarChart = new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: ['Tradición', 'Intensidad', 'Fusión', 'Contundencia', 'Jugosidad'],
-                    datasets: [{
-                        label: flavorData.clasica.label,
-                        data: flavorData.clasica.data,
-                        fill: true,
-                        backgroundColor: flavorData.clasica.color,
-                        borderColor: flavorData.clasica.borderColor,
-                        pointBackgroundColor: flavorData.clasica.borderColor,
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: flavorData.clasica.borderColor
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    elements: {
-                        line: { borderWidth: 3 }
-                    },
-                    scales: {
-                        r: {
-                            angleLines: { display: true, color: '#e5e7eb' },
-                            suggestedMin: 0,
-                            suggestedMax: 100,
-                            grid: { color: '#e5e7eb' },
-                            pointLabels: {
-                                font: { size: 14, weight: 'bold', family: "'Nunito', sans-serif" },
-                                color: '#78350F' // Amber 900
-                            },
-                            ticks: { display: false } // Hide numbers for cleaner look
-                        }
-                    },
-                    plugins: {
-                        legend: { display: true, position: 'bottom', labels: { font: { size: 14 } } }
-                    }
-                }
-            });
-            
-            // Set initial text
-            document.getElementById('flavor-text').innerText = flavorData.clasica.text;
-        });
-
-        function showFlavorProfile(type) {
-            // Scroll to chart
-            document.getElementById('sabores').scrollIntoView({ behavior: 'smooth' });
-
-            // Update Chart
-            const selected = flavorData[type];
-            
-            radarChart.data.datasets[0].label = selected.label;
-            radarChart.data.datasets[0].data = selected.data;
-            radarChart.data.datasets[0].backgroundColor = selected.color;
-            radarChart.data.datasets[0].borderColor = selected.borderColor;
-            radarChart.data.datasets[0].pointBackgroundColor = selected.borderColor;
-            radarChart.data.datasets[0].pointHoverBorderColor = selected.borderColor;
-            
-            radarChart.update();
-
-            // Update Text Description with Fade Effect
-            const textElem = document.getElementById('flavor-text');
-            textElem.style.opacity = 0;
             setTimeout(() => {
-                textElem.innerText = selected.text;
-                textElem.style.opacity = 1;
-            }, 200);
+                document.getElementById('login-view').classList.remove('active');
+                setTimeout(() => {
+                    document.getElementById('login-view').style.display = 'none';
+                    document.getElementById('app-layout').classList.remove('hidden');
+                    nav('dashboard');
+                }, 300);
+            }, 800);
         }
 
-        // Simple smooth scrolling for nav links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+        function logout() {
+            if(confirm('¿Seguro que desea cerrar la sesión segura?')) {
+                document.getElementById('app-layout').classList.add('hidden');
+                document.getElementById('login-view').style.display = 'flex';
+                setTimeout(() => {
+                    document.getElementById('login-view').classList.add('active');
+                    const formBtn = document.querySelector('#login-view button[type="submit"]');
+                    formBtn.innerHTML = 'Ingresar al Sistema <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>';
+                    lucide.createIcons();
+                }, 10);
+            }
+        }
+
+        function nav(viewId) {
+            // 1. Ocultar todas las vistas
+            document.querySelectorAll('.view-section').forEach(el => {
+                el.classList.remove('active');
             });
-        });
+            
+            // 2. Mostrar la vista solicitada
+            const target = document.getElementById('view-' + viewId);
+            if(target) target.classList.add('active');
+
+            // 3. Actualizar Título del Header
+            const titleEl = document.getElementById('page-title');
+            if(titleEl && titulosVistas[viewId]) {
+                titleEl.textContent = titulosVistas[viewId];
+            }
+
+            // 4. Actualizar Estado Activo en el Menú Lateral
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                // Resetear estilos a inactivo
+                btn.classList.remove('bg-imperium-800', 'text-white', 'border-imperium-gold');
+                btn.classList.add('border-transparent', 'text-slate-300', 'text-slate-400');
+                
+                // Si el onclick del botón contiene la vista actual, activarlo
+                if(btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(`nav('${viewId}')`)) {
+                    btn.classList.remove('border-transparent', 'text-slate-300', 'text-slate-400');
+                    btn.classList.add('bg-imperium-800', 'text-white', 'border-imperium-gold');
+                }
+            });
+
+            // Lógica específica al abrir la lista de expedientes
+            if(viewId === 'expedientes') renderTable();
+        }
+
+        // -----------------------------------------------------
+        // Datos y Renderizado de la Tabla Principal
+        // -----------------------------------------------------
+        const mockData = [
+            { id: '142-2026-ARB', tipo: 'Arbitraje', partes: 'Constructora ABC vs Min. Transportes', estado: 'En Proceso', color: 'bg-indigo-100 text-indigo-800' },
+            { id: '112-2026-CC', tipo: 'Conciliación', partes: 'Inmobiliaria Sur vs Juan Perez', estado: 'Audiencia Hoy', color: 'bg-amber-100 text-amber-800' },
+            { id: '008-2026-JRD', tipo: 'JRD', partes: 'Consorcio Vial vs GORE', estado: 'Instalada', color: 'bg-blue-100 text-blue-800' },
+            { id: '105-2026-CC', tipo: 'Conciliación', partes: 'Maria Gomez vs Carlos Ruiz', estado: 'Acuerdo Total', color: 'bg-green-100 text-green-800' }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('tabla-expedientes');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            
+            mockData.forEach(row => {
+                let icon = 'folder';
+                if(row.tipo === 'Arbitraje') icon = 'gavel';
+                if(row.tipo === 'Conciliación') icon = 'users';
+                if(row.tipo === 'JRD') icon = 'briefcase';
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50 transition border-b border-slate-100';
+                tr.innerHTML = `
+                    <td class="px-6 py-4 font-mono font-bold text-imperium-900">${row.id}</td>
+                    <td class="px-6 py-4 flex items-center text-slate-600 font-medium">
+                        <i data-lucide="${icon}" class="w-4 h-4 mr-2 text-imperium-gold"></i> ${row.tipo}
+                    </td>
+                    <td class="px-6 py-4 font-medium text-slate-800 text-xs">${row.partes}</td>
+                    <td class="px-6 py-4">
+                        <span class="${row.color} px-2.5 py-1 rounded text-[10px] font-bold tracking-widest uppercase">${row.estado}</span>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <!-- BOTÓN MODIFICADO PARA ABRIR LA NUEVA VISTA -->
+                        <button onclick="nav('detalle-expediente')" class="bg-slate-100 text-slate-600 px-3 py-1.5 rounded text-xs font-bold hover:bg-imperium-900 hover:text-white transition shadow-sm flex items-center justify-center mx-auto">
+                            <i data-lucide="folder-open" class="w-4 h-4 mr-1"></i> Abrir
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            lucide.createIcons();
+        }
     </script>
 </body>
 </html>
